@@ -13,12 +13,12 @@ random_float = np.random.uniform(0.0, 3600.0)  # Range is 0 <= random_float < 36
 rpm = random_float  # Random RPM value for testing
 # fuel in tank in liters
 fuel_in_tank = 100  # in liters
-expected_fuel = 0.0
-expected_torque = 0.0
-expected_power = 0.0
 
 
 if __name__ == "__main__":
+
+    # Send the RPM value to the server
+    ws.send_delta("propulsion.main.revolutions", rpm)
 
     # Get the fuel consumption rate at the given RPM
     fuel_rate = fuel.to_m3_per_s(fuel.get_usage(rpm))
@@ -35,10 +35,10 @@ if __name__ == "__main__":
     # Send the path and value to the server: propulsion.main.power
     ws.send_signal_k_delta(power.get_path(), power_value, power.get_metadata())
 
-    # Calculate runtime based on fuel in the tank and fuel consumption rate
+    # Calculate remaining runTime based on fuel in the tank and fuel consumption rate
     fuel_runtime = utils.get_fuel_runtime(fuel_in_tank, fuel_rate)
-    # Send the path and value to the server: propulsion.main.fuel.runtime
-    ws.send_signal_k_delta("propulsion.main.fuel.runtime", fuel_runtime)
+    # Send the path and value to the server: propulsion.main.fuel.runTime
+    ws.send_signal_k_delta("propulsion.main.fuel.runTime", fuel_runtime)
 
     # Calculate BSFC at the given RPM
     bsfc = utils.calculate_bsfc(fuel.get_usage(rpm), power_value)
