@@ -8,38 +8,46 @@ import torque as torque
 import power as power
 
 # rpm value for testing purposes
-rpm_value = 2750
+# Generate a random float between 0 and 3600
+random_float = np.random.uniform(0.0, 3600.0)  # Range is 0 <= random_float < 3600
+rpm = random_float  # Random RPM value for testing
 # fuel in tank in liters
 fuel_in_tank = 100  # in liters
+expected_fuel = 0.0
+expected_torque = 0.0
+expected_power = 0.0
 
 
 if __name__ == "__main__":
 
-    # Simulate sending values to the WebSocket from main
-    for rpm in range(1000, 3000, 500):
-        fuel_rate = fuel.to_m3_per_s(fuel.get_usage(rpm))
-        print(f"Calculated fuel consumption: {fuel_rate}")
-        ws.send_signal_k_delta(fuel.get_path(), fuel_rate, fuel.get_metadata())
+    # Get the fuel consumption rate at the given RPM
+    fuel_rate = fuel.to_m3_per_s(fuel.get_usage(rpm))
+    # Send the path and value to the server: propulsion.main.fuel.rate
+    ws.send_signal_k_delta(fuel.get_path(), fuel_rate, fuel.get_metadata())
 
-        torque_value = torque.get_ratio(rpm)
-        print(f"Torque at {rpm_value} RPM: {torque_value} kg-m")
-        ws.send_signal_k_delta(torque.get_path(), torque_value, torque.get_metadata())
+    # Calculate torque and power at the given RPM
+    torque_value = torque.get_ratio(rpm)
+    # Send the path and value to the server: propulsion.main.engineTorque
+    ws.send_signal_k_delta(torque.get_path(), torque_value, torque.get_metadata())
 
-        power_value = power.get_power(rpm)
-        print(f"Power at {rpm_value} RPM: {power_value} HP")
-        ws.send_signal_k_delta(power.get_path(), power_value, power.get_metadata())
+    # Calculate propeller power at the given RPM
+    power_value = power.get_power(rpm)
+    # Send the path and value to the server: propulsion.main.power
+    ws.send_signal_k_delta(power.get_path(), power_value, power.get_metadata())
 
-        bsfc = utils.calculate_bsfc(fuel.get_usage(rpm), power_value)
-        print(f"BSFC at {rpm} RPM: {bsfc} grams per HP per hour")
+    # Calculate runtime based on fuel in the tank and fuel consumption rate
+    fuel_runtime = utils.get_fuel_runtime(fuel_in_tank, fuel_rate)
+    # Send the path and value to the server: propulsion.main.fuel.runtime
+    ws.send_signal_k_delta("propulsion.main.fuel.runtime", fuel_runtime)
 
-        efficiency = utils.calculate_efficiency(torque_value, fuel.get_usage(rpm))
-        print(f"Efficiency at {rpm_value} RPM: {efficiency} kg-m per gram")
+    # Calculate BSFC at the given RPM
+    bsfc = utils.calculate_bsfc(fuel.get_usage(rpm), power_value)
+    print(f"BSFC at {rpm} RPM: {bsfc} grams per HP per hour")
 
-        fuel_runtime = utils.get_fuel_runtime(fuel_in_tank, fuel_rate)
-        print(f"Fuel runtime: {fuel_runtime} hours")
-        ws.send_signal_k_delta("propulsion.main.fuel.runtime", fuel_runtime)
+    # Calculate efficiency at the given RPM
+    efficiency = utils.calculate_efficiency(torque_value, fuel.get_usage(rpm))
+    print(f"Efficiency at {rpm} RPM: {efficiency} kg-m per gram")
 
-    # comparison = utils.compare_to_factory(
-    #    rpm_value, fuel_consumption, torque_value, power_value
-    # )
-    # print(f"Comparison at {rpm_value} RPM: {comparison}")
+    # Implement real comparison to factory settings. Get expected values from factory data. Will equal 100% if values match.
+    comparison = utils.compare_to_factory(rpm, fuel_rate, torque_value, power_value)
+    print(f"Comparison at {rpm} RPM: {comparison}")
