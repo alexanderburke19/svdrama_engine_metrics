@@ -1,20 +1,20 @@
-# Engine Metrics
+**Engine Metrics**
 
-## Overview
+*Overview*
 `engine_metrics` is a Python project designed to monitor and analyze engine performance metrics. This project is intended for use with Raspberry Pi to collect and process data from various engine sensors.
 
-## Features
+*Features*
 - Real-time data collection from engine sensors
 - Data processing and analysis
 - Visualization of engine performance metrics
 - Alerts and notifications for abnormal engine behavior
 
-## Requirements
+*Requirements*
 - Raspberry Pi
 - Python 3.x
 - Required Python libraries (see `requirements.txt`)
 
-## Installation
+*Installation*
 1. Clone the repository:
     ```sh
     git clone https://github.com/yourusername/engine_metrics.git
