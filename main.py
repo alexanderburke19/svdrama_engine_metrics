@@ -18,7 +18,7 @@ fuel_in_tank = 100  # in liters
 if __name__ == "__main__":
 
     # Send the RPM value to the server
-    ws.send_delta("propulsion.main.revolutions", rpm)
+    ws.send_signal_k_delta("propulsion.main.revolutions", rpm)
 
     # Get the fuel consumption rate at the given RPM
     fuel_rate = fuel.to_m3_per_s(fuel.get_usage(rpm))
