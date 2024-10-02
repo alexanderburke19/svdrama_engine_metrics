@@ -1,0 +1,21 @@
+paths:
+  fuel:
+    path: "propulsion.main.fuel.rate"
+    meta:
+      units: "m³/s"
+      displayName: "Fuel Consumption Rate"
+      description: "Rate of fuel consumption in cubic meters per second"
+  torque:
+    path: "propulsion.main.engineTorque"
+    meta:
+      units: "ratio"
+      displayName: "Engine Torque"
+      description: "Engine torque ratio"
+  power:
+    path: "propulsion.main.power"
+    meta:
+      units: "kW"
+      displayName: "Engine Power"
+      description: "Engine power output in kilowatts"
+  fuel_run_time:
+    path: "propulsion.main.fuel.runTime"
