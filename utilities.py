@@ -5,12 +5,27 @@ from power import power_poly
 
 # Function to calculate runtime based on fuel in the tank and fuel consumption rate
 def get_fuel_runtime(fuel_in_tank_liters, fuel_consumption_rate_g_per_h):
+    """Calculate the runtime based on the fuel in the tank and the fuel consumption rate
+
+    Args:
+        fuel_in_tank_liters (float): The amount of fuel in the tank in liters
+        fuel_consumption_rate_g_per_h (float): The fuel consumption rate in grams per hour based on current RPM
+
+    Returns:
+        float: The amount of time the engine can run based on the fuel in the tank and the fuel consumption rate at a given RPM
+    """
     # Convert fuel in the tank to grams
     fuel_in_tank_grams = fuel_in_tank_liters * 832  # 832 grams per liter for diesel
 
     # Calculate runtime in hours
     runtime_hours = fuel_in_tank_grams / fuel_consumption_rate_g_per_h
-    return runtime_hours
+
+    # Convert runtime to minutes
+    runtime_minutes = runtime_hours * 60
+
+    # Convert runtime to seconds
+    runtime_seconds = runtime_minutes * 60
+    return runtime_seconds
 
 
 # Define a function to calculate BSFC (Brake Specific Fuel Consumption)
