@@ -19,3 +19,7 @@ paths:
       description: "Engine power output in kilowatts"
   fuel_run_time:
     path: "propulsion.main.fuel.runTime"
+    meta:
+      units: "s"
+      displayName: "Remaining Fuel Run Time"
+      description: "Time to consume the remaining fuel at the current RPMs"
