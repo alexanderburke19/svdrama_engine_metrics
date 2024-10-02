@@ -2,30 +2,6 @@ import numpy as np
 from numpy.polynomial import Polynomial
 
 
-def get_path():
-    """The Signalk path for fuel consumption. Path 'propulsion.main.fuel.rate'.
-
-    Returns:
-        string: The Signalk path for fuel consumption.
-    """
-    return "propulsion.main.fuel.rate"
-
-
-def get_metadata():
-    """Metadata for the Signalk path for fuel consumption. Path 'propulsion.main.fuel.rate'.
-
-    Returns:
-        string: A JSON object with metadata for the fuel consumption path.
-    """
-    metadata = {
-        "units": "m3/s",  # Cubic meters per second
-        "displayName": "Fuel Consumption",
-        "description": "The rate of fuel consumption in cubic meters per second",
-        "timeout": 60,  # Set a timeout for how long this data is valid (optional)
-    }
-    return metadata
-
-
 def get_usage(RPM) -> float:
     """Calculate fuel consumption at a given RPM using a polynomial derived from engine data in the Yanmar 4JH2E service manual.
 
@@ -138,10 +114,3 @@ def get_coefficients(x, y):
     # Fit a 2nd degree polynomial to the data
     fuel_poly = Polynomial.fit(x, y, 2)
     return fuel_poly.convert().coef
-
-
-def get_curve(rpm_arr, fuel_poly):
-    # Generate a smooth curve for plotting
-    rpm_smooth = np.linspace(rpm_arr.min(), rpm_arr.max(), 500)
-    fuel_smooth = fuel_poly(rpm_smooth)
-    return fuel_smooth

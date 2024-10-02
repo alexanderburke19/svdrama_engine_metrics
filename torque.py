@@ -55,20 +55,6 @@ torque_poly = Polynomial(torque_coefficients)
 max_torque = 11.1
 
 
-def get_path():
-    return "propulsion.main.engineTorque"
-
-
-def get_metadata():
-    metadata = {
-        "units": "ratio",  # Engine torque ratio, 0<=ratio<=1, 1 is 100%
-        "displayName": "Engine torque",
-        "description": "Engine torque ratio, 0<=ratio<=1, 1 is 100%",
-        "timeout": 60,  # Set a timeout for how long this data is valid (optional)
-    }
-    return metadata
-
-
 def get_torque(RPM) -> float:
     # returns torque in kg-m at a given RPM
     return torque_poly(RPM)
@@ -94,23 +80,3 @@ def get_coefficients(x, y):
     # Fit a 2nd degree polynomial to the data
     torque_poly = Polynomial.fit(x, y, 2)
     return torque_poly.convert().coef
-
-
-def get_curve(rpm, torque_poly):
-    # Generate a smooth curve for plotting
-    rpm_smooth = np.linspace(rpm.min(), rpm.max(), 500)
-    torque_smooth = torque_poly(rpm_smooth)
-    return rpm_smooth, torque_smooth
-
-
-def plot_curve(rpm, torque, rpm_smooth, torque_smooth):
-    # Plot the original data points and the fitted curve
-    plt.figure(figsize=(8, 6))
-    plt.plot(rpm, torque, "o", label="Data points")
-    plt.plot(rpm_smooth, torque_smooth, "-", label="Fitted curve (2nd degree)")
-    plt.title("Torque vs RPM")
-    plt.xlabel("RPM")
-    plt.ylabel("Torque (kg-m)")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
