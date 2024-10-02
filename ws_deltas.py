@@ -71,7 +71,7 @@ async def send_delta(sk_path, new_value, metadata=None):
         print(f"Received response: {response}")
 
 
-async def send_signal_k_delta(sk_path, new_value, metadata=None):
+def send_signal_k_delta(sk_path, new_value, metadata=None):
     """Add a Signal K delta message to async event loop to send the delta to SignalK asynchronusly.
 
     Args:
@@ -80,6 +80,6 @@ async def send_signal_k_delta(sk_path, new_value, metadata=None):
         metadata (string, optional): The metadata for sk_path to set unit type and description. Defaults to None.
     """
     # Include the token in the connection headers
-    await asyncio.get_event_loop().run_until_complete(
+    asyncio.get_event_loop().run_until_complete(
         send_delta(sk_path, new_value, metadata=None)
     )
