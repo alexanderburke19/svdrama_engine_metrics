@@ -24,8 +24,12 @@ token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRyYW1hIiwiaWF0IjoxNzExNT
 # Load the YAML configuration file
 def load_paths():
     with open("yaml/paths.yaml", "r") as file:
-        config = yaml.safe_load(file)
-    return config
+        try:
+            config = yaml.safe_load(file)
+            return config
+        except yaml.YAMLError as exc:
+            print(exc)
+            return None
 
 
 config = load_paths()  # Load the YAML config
