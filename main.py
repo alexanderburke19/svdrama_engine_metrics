@@ -77,9 +77,15 @@ async def receive_data():
                                     # Transform data and send it back via the same WebSocket connection
                                     await transform_data(websocket, rpm_value)
 
-        except (websockets.exceptions.ConnectionClosed, ConnectionError):
-            print("WebSocket connection lost. Reconnecting...")
+        except (websockets.exceptions.ConnectionClosed, ConnectionError) as e:
+            print(f"WebSocket connection lost: {e}. Reconnecting...")
             await asyncio.sleep(5)  # Wait before reconnecting
+
+        finally:
+            # Ensure that the WebSocket is closed properly
+            if not websocket.closed:
+                await websocket.close()
+            print("WebSocket connection closed.")
 
 
 async def transform_data(websocket, rpm):
@@ -147,10 +153,11 @@ async def transform_data(websocket, rpm):
 
 async def main():
     """Run the receive and send WebSocket connections in parallel."""
-    # Start receiving data and transform/sending in parallel
-    await asyncio.gather(
-        receive_data(),
-    )
+    try:
+        # Run receive data with a timeout of, for example, 8 minutes (480 seconds)
+        await asyncio.wait_for(receive_data(), timeout=480)
+    except asyncio.TimeoutError:
+        print("WebSocket connection timed out.")
 
 
 if __name__ == "__main__":
